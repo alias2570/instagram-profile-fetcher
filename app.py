@@ -13,13 +13,14 @@ def get_instagram_profile_picture(username):
     
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
+        # تلاش برای یافتن تگ <meta> که شامل لینک تصویر پروفایل است
         image_tag = soup.find('meta', property='og:image')
         if image_tag:
-            return image_tag['content']
+            return image_tag['content']  # برمی‌گرداند URL تصویر پروفایل
         else:
-            return None
+            return None  # اگر تصویر پروفایل یافت نشود
     else:
-        return None
+        return None  # در صورت بروز خطا در درخواست HTTP
 
 @app.route('/getProfilePicture')
 def get_profile_picture():
@@ -29,8 +30,4 @@ def get_profile_picture():
         if profile_picture_url:
             return jsonify({'profile_picture': profile_picture_url})
         else:
-            return jsonify({'profile_picture': None}), 404
-    return jsonify({'error': 'نام کاربری مشخص نشده است'}), 400
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+            return jsonify({'profile_picture': 'No image found or private profile_
